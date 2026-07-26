@@ -31,6 +31,32 @@
 
 ---
 
+## 🔄 System Update (Recommended)
+
+Sebelum menginstal **NamyNet**, sangat disarankan memperbarui sistem Ubuntu terlebih dahulu.
+
+### Update Repository
+
+```bash
+apt update
+```
+
+### Upgrade System
+
+```bash
+apt -y upgrade
+```
+
+### Reboot VPS (Jika Diminta)
+
+```bash
+reboot
+```
+
+> **Catatan:** Untuk VPS yang baru dibuat, langkah ini sangat disarankan agar seluruh paket sistem mendapatkan pembaruan keamanan dan kompatibilitas terbaru.
+
+---
+
 ## 📦 Installer Akan Menginstal
 
 - Node.js 22 LTS
@@ -47,19 +73,6 @@
 - UFW Firewall
 - Fail2Ban
 - Certbot SSL
-
----
-
-## 🔄 System Update
-
-Sebelum proses instalasi dimulai, installer akan:
-
-- ✅ Menjalankan `apt update`
-- ✅ Meminta konfirmasi sebelum menjalankan `apt upgrade`
-
-Hal ini memberikan pilihan kepada pengguna untuk melakukan upgrade sistem, terutama jika VPS sudah digunakan sebelumnya.
-
-Untuk VPS baru, sangat disarankan memilih **Yes** agar seluruh paket sistem mendapatkan pembaruan keamanan terbaru.
 
 ---
 
@@ -157,20 +170,23 @@ Terima kasih atas dukungannya.
 
 ## ⚠️ Important
 
-- File **install.sh** harus menggunakan format **LF (Unix)**.
-- Jangan gunakan format **CRLF (Windows)** karena dapat menyebabkan error:
+File **install.sh** harus menggunakan format **LF (Unix)**.
+
+Apabila muncul error:
 
 ```text
 cannot execute: required file not found
 ```
 
-Apabila file sudah terlanjur menggunakan format CRLF, jalankan:
+Jalankan perintah berikut:
 
 ```bash
 sed -i 's/\r$//' install.sh
 chmod +x install.sh
 ./install.sh
 ```
+
+Atau ubah format file menjadi **LF (Unix)** menggunakan Visual Studio Code atau editor lainnya sebelum diunggah ke GitHub.
 
 ---
 
