@@ -62,6 +62,21 @@ read -p "Masukkan Domain / IP : " SERVER
 read -p "Domain WireGuard [wg.namystore.com] : " WG_DOMAIN
 WG_DOMAIN=${WG_DOMAIN:-wg.namystore.com}
 
+echo
+echo "===================================================="
+echo "WireGuard Configuration"
+echo "===================================================="
+
+echo "1. Generate New Configuration"
+echo "2. Restore Existing Configuration"
+
+read -p "Pilih [1/2] : " WG_MODE
+
+while [[ "$WG_MODE" != "1" && "$WG_MODE" != "2" ]]; do
+    read -p "Pilih 1 atau 2 : " WG_MODE
+done
+
+
 while [[ -z "$SERVER" ]]; do
 read -p "Domain / IP tidak boleh kosong : " SERVER
 done
@@ -327,10 +342,52 @@ mkdir -p /etc/wireguard
 
 chmod 700 /etc/wireguard
 
-SERVER_PRIVATE=$(wg genkey)
-SERVER_PUBLIC=$(echo "$SERVER_PRIVATE" | wg pubkey)
+if [[ "$WG_MODE" == "2" ]]; then
+
+    echo
+    echo "Downloading WireGuard Backup..."
+
+    wget -q -O /tmp/namynet-wg0.conf \
+    https://raw.githubusercontent.com/namydeveloper/NamyNet/main/namynet-wg0.conf
+
+    if [ $? -ne 0 ]; then
+        echo "Download WireGuard Backup gagal!"
+        exit 1
+    fi
+
+    if [ ! -s /tmp/namynet-wg0.conf ]; then
+        echo "Backup WireGuard kosong!"
+        exit 1
+    fi
+
+    if ! grep -q "^\[Interface\]" /tmp/namynet-wg0.conf; then
+    echo "File backup WireGuard tidak valid!"
+    exit 1
+fi
+
+    SERVER_PRIVATE=$(grep "^PrivateKey" /tmp/namynet-wg0.conf | cut -d'=' -f2 | xargs)
+	if [ -z "$SERVER_PRIVATE" ]; then
+    echo "PrivateKey tidak ditemukan pada backup!"
+    exit 1
+fi
+    SERVER_PUBLIC=$(echo "$SERVER_PRIVATE" | wg pubkey)
+
+else
+
+    SERVER_PRIVATE=$(wg genkey)
+    SERVER_PUBLIC=$(echo "$SERVER_PRIVATE" | wg pubkey)
+
+fi
 
 NIC=$(ip route | awk '/default/ {print $5}' | head -n1)
+
+if [[ "$WG_MODE" == "2" ]]; then
+
+    cp /tmp/namynet-wg0.conf /etc/wireguard/wg0.conf
+
+    sed -i "s/-o eth0 /-o $NIC /g" /etc/wireguard/wg0.conf
+
+else
 
 cat > /etc/wireguard/wg0.conf <<EOF
 [Interface]
@@ -347,6 +404,8 @@ PostDown = iptables -D FORWARD -i wg0 -j ACCEPT
 PostDown = iptables -D FORWARD -o wg0 -j ACCEPT
 PostDown = iptables -t nat -D POSTROUTING -o $NIC -j MASQUERADE
 EOF
+
+fi
 
 chmod 600 /etc/wireguard/wg0.conf
 
