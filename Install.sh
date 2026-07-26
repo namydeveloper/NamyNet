@@ -12,6 +12,20 @@
 
 set -e
 
+# ==========================================
+# CHECKPOINT
+# ==========================================
+
+CHECKPOINT="/opt/.namynet_checkpoint"
+
+step_done() {
+    echo "$1" >> "$CHECKPOINT"
+}
+
+step_ok() {
+    grep -Fxq "$1" "$CHECKPOINT" 2>/dev/null
+}
+
 clear
 
 GREEN="\e[32m"
@@ -81,19 +95,41 @@ if [[ "$CONFIRM" != "y" && "$CONFIRM" != "Y" ]]; then
 exit
 fi
 
+touch "$CHECKPOINT"
+
 clear
 
-echo
+if ! step_ok UPDATE; then
+
 echo "[1/18] Update Repository..."
 
 apt update
 
-echo
+step_done UPDATE
+
+else
+
+echo "[1/18] Update Repository... SKIP"
+
+fi
+
+if ! step_ok UPGRADE; then
+
 echo "[2/18] Upgrade System..."
 
 apt -y upgrade
 
+step_done UPGRADE
+
+else
+
+echo "[2/18] Upgrade System... SKIP"
+
+fi
+
 echo
+if ! step_ok PACKAGE; then
+
 echo "[3/18] Install Basic Package..."
 
 apt install -y \
@@ -117,8 +153,18 @@ fail2ban \
 certbot \
 python3-certbot-nginx
 
+step_done PACKAGE
+
+else
+
+echo "[3/18] Install Basic Package... SKIP"
+
+fi
+
 echo
-echo "[4/18] Install NodeJS 22..."
+if ! step_ok NODEJS; then
+
+echo "[4/18] Install NodeJS..."
 
 mkdir -p /etc/apt/keyrings
 
@@ -132,12 +178,32 @@ apt update
 
 apt install -y nodejs
 
-echo
+step_done NODEJS
+
+else
+
+echo "[4/18] Install NodeJS... SKIP"
+
+fi
+
+if ! step_ok PM2; then
+
 echo "[5/18] Install PM2..."
 
 npm install -g pm2
 
+step_done PM2
+
+else
+
+echo "[5/18] Install PM2... SKIP"
+
+fi
+
 echo
+
+if ! step_ok MARIADB; then
+
 echo "[6/18] Install MariaDB..."
 
 apt install -y mariadb-server mariadb-client
@@ -145,7 +211,18 @@ apt install -y mariadb-server mariadb-client
 systemctl enable mariadb
 systemctl restart mariadb
 
+step_done MARIADB
+
+else
+
+echo "[6/18] Install MariaDB... SKIP"
+
+fi
+
 echo
+
+if ! step_ok NGINX; then
+
 echo "[7/18] Install Nginx..."
 
 apt install -y nginx
@@ -153,12 +230,34 @@ apt install -y nginx
 systemctl enable nginx
 systemctl restart nginx
 
+step_done NGINX
+
+else
+
+echo "[7/18] Install Nginx... SKIP"
+
+fi
+
 echo
+
+if ! step_ok WIREGUARD; then
+
 echo "[8/18] Install WireGuard..."
 
 apt install -y wireguard wireguard-tools
 
+step_done WIREGUARD
+
+else
+
+echo "[8/18] Install WireGuard... SKIP"
+
+fi
+
 echo
+
+if ! step_ok FIREWALL; then
+
 echo "[9/18] Configure Firewall..."
 
 ufw allow OpenSSH
@@ -171,7 +270,18 @@ ufw --force enable
 systemctl enable fail2ban
 systemctl restart fail2ban
 
+step_done FIREWALL
+
+else
+
+echo "[9/18] Configure Firewall... SKIP"
+
+fi
+
 echo
+
+if ! step_ok IPFORWARD; then
+
 echo "[10/18] Enable IP Forward..."
 
 grep -q "^net.ipv4.ip_forward=1" /etc/sysctl.conf || \
@@ -179,11 +289,34 @@ echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
 
 sysctl -p
 
+step_done IPFORWARD
+
+else
+
+echo "[10/18] Enable IP Forward... SKIP"
+
+fi
+
 echo
+
+if ! step_ok TIMEZONE; then
+
 echo "[11/18] Configure Timezone..."
 
 timedatectl set-timezone Asia/Jakarta || true
+
+step_done TIMEZONE
+
+else
+
+echo "[11/18] Configure Timezone... SKIP"
+
+fi
+
 echo
+
+if ! step_ok WGCONFIG; then
+
 echo "[12/18] Configure WireGuard..."
 
 mkdir -p /etc/wireguard
@@ -191,8 +324,6 @@ mkdir -p /etc/wireguard
 chmod 700 /etc/wireguard
 
 SERVER_PRIVATE=$(wg genkey)
-
-SERVER_PUBLIC=$(echo "$SERVER_PRIVATE" | wg pubkey)
 
 NIC=$(ip route | awk '/default/ {print $5}' | head -n1)
 
@@ -218,7 +349,18 @@ systemctl enable wg-quick@wg0
 
 systemctl restart wg-quick@wg0
 
+step_done WGCONFIG
+
+else
+
+echo "[12/18] Configure WireGuard... SKIP"
+
+fi
+
 echo
+
+if ! step_ok DOWNLOAD; then
+
 echo "[13/18] Download NamyNet..."
 
 cd /opt
@@ -227,19 +369,52 @@ rm -f namynet-v2.zip
 
 wget -O namynet-v2.zip https://github.com/namydeveloper/NamyNet/raw/main/namynet-v2.zip
 
+step_done DOWNLOAD
+
+else
+
+echo "[13/18] Download NamyNet... SKIP"
+
+fi
+
 echo
+
+if ! step_ok UNZIP; then
+
 echo "[14/18] Extract Package..."
 
 unzip -o namynet-v2.zip
 
+step_done UNZIP
+
+else
+
+echo "[14/18] Extract Package... SKIP"
+
+fi
+
 echo
+
+if ! step_ok BACKEND; then
+
 echo "[15/18] Install Backend..."
 
 cd /opt/wifi-voucher/backend
 
 npm install
 
+step_done BACKEND
+
+else
+
+echo "[15/18] Install Backend... SKIP"
+
+fi
+
 echo
+
+if ! step_ok DATABASE; then
+
 echo "[16/18] Restore Database..."
 
 if [ -f "/opt/wifi_voucher.sql" ]; then
@@ -253,7 +428,19 @@ else
 echo "wifi_voucher.sql not found. Skip."
 
 fi
+
+step_done DATABASE
+
+else
+
+echo "[16/18] Restore Database... SKIP"
+
+fi
+
 echo
+
+if ! step_ok NGINXCONFIG; then
+
 echo "[17/18] Configure Nginx..."
 
 cat > /etc/nginx/sites-available/namynet <<EOF
@@ -313,12 +500,23 @@ nginx -t
 
 systemctl restart nginx
 
+step_done NGINXCONFIG
+
+else
+
+echo "[17/18] Configure Nginx... SKIP"
+
+fi
+
 echo
+
+if ! step_ok SERVICES; then
+
 echo "[18/18] Start Services..."
 
 cd /opt/wifi-voucher/backend
 
-pm2 delete all >/dev/null 2>&1 || true
+pm2 delete namynet >/dev/null 2>&1 || true
 
 pm2 start app.js --name namynet
 
@@ -338,6 +536,14 @@ echo
 echo "Installing SSL..."
 
 certbot --nginx --non-interactive --agree-tos --register-unsafely-without-email -d $SERVER || true
+
+fi
+
+step_done SERVICES
+
+else
+
+echo "[18/18] Start Services... SKIP"
 
 fi
 
@@ -405,6 +611,7 @@ echo
 echo "WireGuard"
 echo "/etc/wireguard/wg0.conf"
 echo
+rm -f "$CHECKPOINT"
 echo "======================================================="
 echo "Installation Finished"
 echo "======================================================="
