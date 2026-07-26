@@ -1,6 +1,6 @@
 # 🚀 NamyNet
 
-**NamyNet** adalah platform manajemen **SSH, VPN, WireGuard, dan WiFi Voucher** berbasis **Node.js** yang dirancang untuk memudahkan deployment dan pengelolaan server pada VPS Ubuntu.
+**NamyNet** adalah platform manajemen **SSH, VPN, WireGuard, dan WiFi Voucher** berbasis **Node.js** yang dirancang untuk memudahkan deployment dan pengelolaan server pada **Ubuntu VPS**.
 
 ---
 
@@ -23,15 +23,15 @@
 
 ## 📋 Requirements
 
-- Ubuntu 22.04 LTS atau Ubuntu 24.04 LTS
+- Ubuntu 22.04 LTS
+- Ubuntu 24.04 LTS
 - Root Access
-- VPS (DigitalOcean, Vultr, Contabo, Hetzner, Oracle Cloud, AWS, Azure, dan provider lainnya)
+- Minimal RAM 512 MB (Disarankan 1 GB+)
+- Koneksi Internet Aktif
 
 ---
 
-## 📦 Installed Components
-
-Installer akan menginstal dan mengonfigurasi:
+## 📦 Installer Akan Menginstal
 
 - Node.js 22 LTS
 - NPM
@@ -41,6 +41,7 @@ Installer akan menginstal dan mengonfigurasi:
 - Git
 - Curl
 - Wget
+- Nano
 - Unzip
 - WireGuard
 - UFW Firewall
@@ -54,18 +55,22 @@ Installer akan menginstal dan mengonfigurasi:
 ### Menggunakan Wget
 
 ```bash
-wget -qO install.sh https://raw.githubusercontent.com/namydeveloper/NamyNet/main/install.sh && chmod +x install.sh && ./install.sh
+wget -qO install.sh https://raw.githubusercontent.com/namydeveloper/NamyNet/main/install.sh
+chmod +x install.sh
+./install.sh
 ```
 
 ### Menggunakan Curl
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/namydeveloper/NamyNet/main/install.sh -o install.sh && chmod +x install.sh && ./install.sh
+curl -fsSL https://raw.githubusercontent.com/namydeveloper/NamyNet/main/install.sh -o install.sh
+chmod +x install.sh
+./install.sh
 ```
 
 ---
 
-## 📥 Download
+## 📥 Download Source
 
 **NamyNet V2**
 
@@ -87,13 +92,13 @@ https://raw.githubusercontent.com/namydeveloper/NamyNet/main/namynet-v2.zip
 | HTTP | 80 |
 | HTTPS | 443 |
 | SSH | 22 |
-| WireGuard | 51820 |
 | Backend API | 3000 |
 | WebSocket | 8899 |
+| WireGuard | 51820/UDP |
 
 ---
 
-## 🛠 Tech Stack
+## 🛠️ Tech Stack
 
 - Node.js
 - Express.js
@@ -115,29 +120,50 @@ https://github.com/namydeveloper/NamyNet
 
 **Namy Developer**
 
-GitHub:
+GitHub
+
 https://github.com/namydeveloper
 
 ---
 
 ## 🤝 Contributing
 
-Contributions, bug reports, feature requests, and pull requests are welcome.
+Bug reports, feature requests, dan Pull Request sangat diterima.
 
-If you find a bug or have an idea to improve NamyNet, feel free to open an Issue or submit a Pull Request.
+Silakan buka **Issue** apabila menemukan bug atau ingin mengusulkan fitur baru.
 
 ---
 
 ## ⭐ Support
 
-If you like this project, please consider giving it a **⭐ Star** on GitHub.
+Apabila proyek ini bermanfaat, jangan lupa berikan **⭐ Star** pada repository GitHub.
 
-Your support helps this project continue to grow.
+Terima kasih atas dukungannya.
+
+---
+
+## ⚠️ Important
+
+File **install.sh** harus menggunakan format **LF (Unix)**.
+
+Apabila muncul error:
+
+```text
+cannot execute: required file not found
+```
+
+ubah format file menjadi **LF** atau jalankan:
+
+```bash
+sed -i 's/\r$//' install.sh
+chmod +x install.sh
+./install.sh
+```
 
 ---
 
 ## 📄 License
 
-This project is released for educational and personal use.
+Copyright © 2026 Namy Developer
 
-© 2026 Namy Developer. All rights reserved.
+All Rights Reserved.
