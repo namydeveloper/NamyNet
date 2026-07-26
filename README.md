@@ -50,6 +50,19 @@
 
 ---
 
+## 🔄 System Update
+
+Sebelum proses instalasi dimulai, installer akan:
+
+- ✅ Menjalankan `apt update`
+- ✅ Meminta konfirmasi sebelum menjalankan `apt upgrade`
+
+Hal ini memberikan pilihan kepada pengguna untuk melakukan upgrade sistem, terutama jika VPS sudah digunakan sebelumnya.
+
+Untuk VPS baru, sangat disarankan memilih **Yes** agar seluruh paket sistem mendapatkan pembaruan keamanan terbaru.
+
+---
+
 ## ⚡ Installation
 
 ### Menggunakan Wget
@@ -144,15 +157,14 @@ Terima kasih atas dukungannya.
 
 ## ⚠️ Important
 
-File **install.sh** harus menggunakan format **LF (Unix)**.
-
-Apabila muncul error:
+- File **install.sh** harus menggunakan format **LF (Unix)**.
+- Jangan gunakan format **CRLF (Windows)** karena dapat menyebabkan error:
 
 ```text
 cannot execute: required file not found
 ```
 
-ubah format file menjadi **LF** atau jalankan:
+Apabila file sudah terlanjur menggunakan format CRLF, jalankan:
 
 ```bash
 sed -i 's/\r$//' install.sh
