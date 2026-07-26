@@ -365,7 +365,7 @@ if [[ "$WG_MODE" == "2" ]]; then
     exit 1
 fi
 
-    SERVER_PRIVATE=$(grep "^PrivateKey" /tmp/namynet-wg0.conf | cut -d'=' -f2 | xargs)
+    SERVER_PRIVATE=$(grep "^PrivateKey" /tmp/namynet-wg0.conf | cut -d'=' -f2- | tr -d '\r' | xargs)
 	if [ -z "$SERVER_PRIVATE" ]; then
     echo "PrivateKey tidak ditemukan pada backup!"
     exit 1
