@@ -59,6 +59,9 @@ echo "===================================================="
 
 read -p "Masukkan Domain / IP : " SERVER
 
+read -p "Domain WireGuard [wg.namystore.com] : " WG_DOMAIN
+WG_DOMAIN=${WG_DOMAIN:-wg.namystore.com}
+
 while [[ -z "$SERVER" ]]; do
 read -p "Domain / IP tidak boleh kosong : " SERVER
 done
@@ -83,6 +86,7 @@ echo "Konfirmasi"
 echo "===================================================="
 
 echo "Server      : $SERVER"
+echo "WireGuard   : $WG_DOMAIN"
 echo "Database    : $DB_NAME"
 echo "DB User     : $DB_USER"
 echo "Install SSL : $INSTALL_SSL"
@@ -324,12 +328,13 @@ mkdir -p /etc/wireguard
 chmod 700 /etc/wireguard
 
 SERVER_PRIVATE=$(wg genkey)
+SERVER_PUBLIC=$(echo "$SERVER_PRIVATE" | wg pubkey)
 
 NIC=$(ip route | awk '/default/ {print $5}' | head -n1)
 
 cat > /etc/wireguard/wg0.conf <<EOF
 [Interface]
-Address = 10.100.0.1/24
+Address = 172.31.100.1/24
 ListenPort = 51820
 PrivateKey = $SERVER_PRIVATE
 
@@ -660,8 +665,14 @@ echo
 echo "======================================================="
 echo "WireGuard"
 echo "======================================================="
+echo "Endpoint      : $WG_DOMAIN:51820"
 echo "Port          : 51820"
-echo "VPN Network   : 10.100.0.0/24"
+echo "VPN Network   : 172.31.100.0/24"
+echo "Server VPN    : 172.31.100.1"
+echo "Router VPN    : 172.31.100.2"
+echo
+echo "Public Key"
+echo "$SERVER_PUBLIC"
 echo
 echo "======================================================="
 echo "NamyNet Server Ready"
