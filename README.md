@@ -1,89 +1,86 @@
 # 🚀 NamyNet
 
-**NamyNet** adalah sistem manajemen VPN, SSH, WireGuard, dan Voucher WiFi berbasis Node.js yang dirancang agar mudah diinstal pada VPS Ubuntu.
+**NamyNet** adalah platform manajemen **SSH, VPN, WireGuard, dan WiFi Voucher** berbasis **Node.js** yang dirancang untuk memudahkan deployment dan pengelolaan server pada VPS Ubuntu.
+
+---
 
 ## ✨ Features
 
+- ✅ One Click Installer
+- ✅ Multi Server Support
 - ✅ SSH Account Manager
 - ✅ WireGuard Manager
 - ✅ VPN Tunnel Manager
 - ✅ WiFi Voucher Manager
-- ✅ Multi Server Support
 - ✅ Dashboard Monitoring
-- ✅ WebSocket Engine
+- ✅ Real-Time WebSocket Engine
 - ✅ PM2 Process Manager
 - ✅ MariaDB Database
 - ✅ Nginx Web Server
-- ✅ One Click Installer
+- ✅ Automatic Service Management
 
 ---
 
-# 📋 Requirements
+## 📋 Requirements
 
-- Ubuntu 22.04 LTS / 24.04 LTS
+- Ubuntu 22.04 LTS atau Ubuntu 24.04 LTS
 - Root Access
-- VPS (DigitalOcean, Vultr, Contabo, dll.)
+- VPS (DigitalOcean, Vultr, Contabo, Hetzner, Oracle Cloud, AWS, Azure, dan provider lainnya)
 
 ---
 
-# 📦 Installed Components
+## 📦 Installed Components
 
-- NodeJS 22 LTS
+Installer akan menginstal dan mengonfigurasi:
+
+- Node.js 22 LTS
 - NPM
-- MariaDB 10.6+
+- MariaDB
 - PM2
 - Nginx
 - Git
+- Curl
+- Wget
 - Unzip
 - WireGuard
+- UFW Firewall
 - Fail2Ban
-- UFW
 - Certbot SSL
 
 ---
 
-# ⚡ Installation
+## ⚡ Installation
 
-Jalankan perintah berikut:
+### Menggunakan Wget
 
 ```bash
-wget https://raw.githubusercontent.com/namydeveloper/NamyNet/main/Install.sh
-chmod +x Install.sh
-./Install.sh
+wget -qO install.sh https://raw.githubusercontent.com/namydeveloper/NamyNet/main/install.sh && chmod +x install.sh && ./install.sh
 ```
 
-atau
+### Menggunakan Curl
 
 ```bash
-curl -O https://raw.githubusercontent.com/namydeveloper/NamyNet/main/Install.sh
-chmod +x Install.sh
-./Install.sh
+curl -fsSL https://raw.githubusercontent.com/namydeveloper/NamyNet/main/install.sh -o install.sh && chmod +x install.sh && ./install.sh
 ```
 
 ---
 
-# 📥 Download
+## 📥 Download
 
-NamyNet V2
+**NamyNet V2**
 
-https://github.com/namydeveloper/NamyNet/blob/main/namynet-v2.zip
-
----
-
-# 📁 Repository
-
-https://github.com/namydeveloper/NamyNet
+https://raw.githubusercontent.com/namydeveloper/NamyNet/main/namynet-v2.zip
 
 ---
 
-# 🖥️ Supported OS
+## 🖥️ Supported Operating System
 
 - Ubuntu 22.04 LTS
 - Ubuntu 24.04 LTS
 
 ---
 
-# 📌 Default Ports
+## 📌 Default Ports
 
 | Service | Port |
 |----------|------|
@@ -92,13 +89,14 @@ https://github.com/namydeveloper/NamyNet
 | SSH | 22 |
 | WireGuard | 51820 |
 | Backend API | 3000 |
+| WebSocket | 8899 |
 
 ---
 
-# 🛠 Tech Stack
+## 🛠 Tech Stack
 
-- NodeJS
-- ExpressJS
+- Node.js
+- Express.js
 - MariaDB
 - PM2
 - Nginx
@@ -107,14 +105,39 @@ https://github.com/namydeveloper/NamyNet
 
 ---
 
-# 👨‍💻 Author
+## 📁 Repository
 
-Namy Developer
+https://github.com/namydeveloper/NamyNet
 
-GitHub
+---
 
+## 👨‍💻 Author
+
+**Namy Developer**
+
+GitHub:
 https://github.com/namydeveloper
 
 ---
 
-## ⭐ Star this repository if you like this project.
+## 🤝 Contributing
+
+Contributions, bug reports, feature requests, and pull requests are welcome.
+
+If you find a bug or have an idea to improve NamyNet, feel free to open an Issue or submit a Pull Request.
+
+---
+
+## ⭐ Support
+
+If you like this project, please consider giving it a **⭐ Star** on GitHub.
+
+Your support helps this project continue to grow.
+
+---
+
+## 📄 License
+
+This project is released for educational and personal use.
+
+© 2026 Namy Developer. All rights reserved.
