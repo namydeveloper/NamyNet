@@ -451,11 +451,11 @@ server {
     server_name $SERVER;
 
     root /opt/wifi-voucher/frontend;
-    index index.html index.htm;
+    index login.html login.htm;
 
     location / {
 
-        try_files \$uri \$uri/ /index.html;
+        try_files \$uri \$uri/ /login.html;
 
     }
 
@@ -477,7 +477,7 @@ server {
 
     location /ws/ {
 
-        proxy_pass http://127.0.0.1:8880;
+        proxy_pass http://127.0.0.1:8899;
 
         proxy_http_version 1.1;
 
