@@ -419,13 +419,73 @@ echo "[16/18] Restore Database..."
 
 if [ -f "/opt/wifi_voucher.sql" ]; then
 
-mysql -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" < /opt/wifi_voucher.sql
+echo "Creating Database..."
 
-echo "Database Restored."
+if [ -z "$DB_PASS" ]; then
+
+mysql -u "$DB_USER" <<EOF
+CREATE DATABASE IF NOT EXISTS \`$DB_NAME\`;
+EOF
 
 else
 
-echo "wifi_voucher.sql not found. Skip."
+mysql -u "$DB_USER" -p"$DB_PASS" <<EOF
+CREATE DATABASE IF NOT EXISTS \`$DB_NAME\`;
+EOF
+
+fi
+
+echo "Restoring Database..."
+
+if [ -z "$DB_PASS" ]; then
+
+mysql -u "$DB_USER" "$DB_NAME" < /opt/wifi_voucher.sql
+
+else
+
+mysql -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" < /opt/wifi_voucher.sql
+
+fi
+
+echo "Database Restored."
+
+echo "Creating Database User..."
+
+if [ "$DB_USER" != "root" ]; then
+
+mysql -u root <<EOF
+CREATE USER IF NOT EXISTS '$DB_USER'@'localhost'
+IDENTIFIED BY '$DB_PASS';
+
+GRANT ALL PRIVILEGES
+ON \`$DB_NAME\`.*
+TO '$DB_USER'@'localhost';
+
+FLUSH PRIVILEGES;
+EOF
+
+fi
+
+if [ -z "$DB_PASS" ]; then
+
+    TABLE_COUNT=$(mysql -N -B -u "$DB_USER" "$DB_NAME" -e "SHOW TABLES;" | wc -l)
+
+else
+
+    TABLE_COUNT=$(mysql -N -B -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" -e "SHOW TABLES;" | wc -l)
+
+fi
+
+echo "Tables : $TABLE_COUNT"
+
+if [ "$TABLE_COUNT" -eq 0 ]; then
+    echo "Restore Database Failed!"
+    exit 1
+fi
+
+else
+
+echo "wifi_voucher.sql not found."
 
 fi
 
@@ -520,6 +580,16 @@ pm2 delete namynet >/dev/null 2>&1 || true
 
 pm2 start app.js --name namynet
 
+sleep 3
+
+curl http://127.0.0.1:3000 >/dev/null 2>&1 || {
+
+    echo
+    echo "Backend Failed!"
+    exit 1
+
+}
+
 pm2 save
 
 pm2 startup systemd -u root --hp /root >/tmp/pm2_startup.txt
@@ -528,6 +598,7 @@ bash <(grep "sudo" /tmp/pm2_startup.txt | sed 's/sudo //') || true
 
 systemctl restart mariadb
 systemctl restart nginx
+nginx -t || exit 1
 systemctl restart wg-quick@wg0 || true
 
 if [[ "$INSTALL_SSL" == "y" || "$INSTALL_SSL" == "Y" ]]; then
