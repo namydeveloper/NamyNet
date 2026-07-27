@@ -19,7 +19,7 @@ echo "║   ██║╚██╗██║██╔══██║██║╚�
 echo "║   ██║ ╚████║██║  ██║██║ ╚═╝ ██║   ██║   ██║ ╚████║███████╗   ██║     ║"
 echo "║   ╚═╝  ╚═══╝╚═╝  ╚═╝╚═╝     ╚═╝   ╚═╝   ╚═╝  ╚═══╝╚══════╝   ╚═╝     ║"
 echo "║                                                                      ║"
-echo "║        SSH • VPN • WireGuard • WiFi Voucher Management               ║"
+echo "║            SSH • VPN • WireGuard • WiFi Voucher Management           ║"
 echo "║                                                                      ║"
 echo "╚══════════════════════════════════════════════════════════════════════╝"
 echo -e "${NC}"
