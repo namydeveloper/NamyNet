@@ -98,22 +98,6 @@ Install NamyNet hanya dengan satu perintah.
 bash <(curl -fsSL https://raw.githubusercontent.com/namydeveloper/NamyNet/main/namynet.sh)
 ```
 
-Installer akan menampilkan menu:
-
-```text
-==========================================
-          NAMYNET MANAGER
-==========================================
-
-1. Install NamyNet
-2. Uninstall NamyNet
-3. Exit
-```
-
-Pilih menu yang diinginkan, kemudian ikuti proses instalasi.
-
----
-
 # 🗄️ Default Database
 
 Saat installer meminta konfigurasi database, gunakan contoh berikut.
