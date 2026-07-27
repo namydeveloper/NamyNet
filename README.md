@@ -90,27 +90,27 @@ reboot
 * Build Essential
 * Network Utilities
 
----
-
 # ⚡ Installation
 
-## Using Wget
+Install NamyNet hanya dengan satu perintah.
 
 ```bash
-wget -qO install.sh https://raw.githubusercontent.com/namydeveloper/NamyNet/main/install.sh
-chmod +x install.sh
-./install.sh
+bash <(curl -fsSL https://raw.githubusercontent.com/namydeveloper/NamyNet/main/namynet.sh)
 ```
 
----
+Installer akan menampilkan menu:
 
-## Using Curl
+```text
+==========================================
+          NAMYNET MANAGER
+==========================================
 
-```bash
-curl -fsSL https://raw.githubusercontent.com/namydeveloper/NamyNet/main/install.sh -o install.sh
-chmod +x install.sh
-./install.sh
+1. Install NamyNet
+2. Uninstall NamyNet
+3. Exit
 ```
+
+Pilih menu yang diinginkan, kemudian ikuti proses instalasi.
 
 ---
 
