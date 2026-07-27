@@ -1,19 +1,42 @@
 #!/bin/bash
 
+GREEN='\033[1;32m'
+CYAN='\033[1;36m'
+YELLOW='\033[1;33m'
+RED='\033[1;31m'
+WHITE='\033[1;37m'
+NC='\033[0m'
+
 clear
 
-echo "========================================"
-echo "         NAMYNET MANAGER V1"
-echo "========================================"
+echo -e "${CYAN}"
+echo "╔════════════════════════════════════════════════════════════════════╗"
+echo "║                                                                    ║"
+echo "║   ███╗   ██╗ █████╗ ███╗   ███╗██╗   ██╗███╗   ██╗███████╗████████╗║"
+echo "║   ████╗  ██║██╔══██╗████╗ ████║╚██╗ ██╔╝████╗  ██║██╔════╝╚══██╔══╝║"
+echo "║   ██╔██╗ ██║███████║██╔████╔██║ ╚████╔╝ ██╔██╗ ██║█████╗     ██║   ║"
+echo "║   ██║╚██╗██║██╔══██║██║╚██╔╝██║  ╚██╔╝  ██║╚██╗██║██╔══╝     ██║   ║"
+echo "║   ██║ ╚████║██║  ██║██║ ╚═╝ ██║   ██║   ██║ ╚████║███████╗   ██║   ║"
+echo "║   ╚═╝  ╚═══╝╚═╝  ╚═╝╚═╝     ╚═╝   ╚═╝   ╚═╝  ╚═══╝╚══════╝   ╚═╝   ║"
+echo "║                                                                    ║"
+echo "║        SSH • VPN • WireGuard • WiFi Voucher Management             ║"
+echo "║                                                                    ║"
+echo "╚════════════════════════════════════════════════════════════════════╝"
+echo -e "${NC}"
+
 echo
-echo "1. Install NamyNet"
-echo "2. Uninstall NamyNet"
-echo "3. Exit"
+echo -e "${YELLOW}========================== MAIN MENU ===========================${NC}"
+echo
+echo -e " ${GREEN}[1]${NC} Install NamyNet"
+echo -e " ${RED}[2]${NC} Uninstall NamyNet"
+echo -e " ${WHITE}[3]${NC} Exit"
+echo
+echo -e "${YELLOW}===============================================================${NC}"
 echo
 
 read -p "Pilih Menu [1-3] : " MENU
 
-case $MENU in
+case "$MENU" in
 
 1)
 
@@ -51,13 +74,20 @@ case $MENU in
 
 3)
 
+    clear
+    echo
+    echo "Terima kasih telah menggunakan NamyNet."
+    echo
     exit
 
 ;;
 
 *)
 
+    echo
     echo "Menu tidak tersedia."
+    sleep 2
+    exec "$0"
 
 ;;
 
