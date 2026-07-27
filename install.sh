@@ -86,10 +86,12 @@ echo
 read -p "Nama Database [wifi_voucher] : " DB_NAME
 DB_NAME=${DB_NAME:-wifi_voucher}
 
-read -p "User Database [root] : " DB_USER
-DB_USER=${DB_USER:-root}
+read -p "User Database [namynet] : " DB_USER
+DB_USER=${DB_USER:-namynet}
 
-read -s -p "Password Database : " DB_PASS
+read -s -p "Password Database [namynet123] : " DB_PASS
+echo
+DB_PASS=${DB_PASS:-namynet123}
 echo
 
 echo
@@ -483,42 +485,15 @@ echo "[16/18] Restore Database..."
 
 if [ -f "/opt/wifi_voucher.sql" ]; then
 
-echo "Creating Database..."
-
-if [ -z "$DB_PASS" ]; then
-
-mysql -u "$DB_USER" <<EOF
-CREATE DATABASE IF NOT EXISTS \`$DB_NAME\`;
-EOF
-
-else
-
-mysql -u "$DB_USER" -p"$DB_PASS" <<EOF
-CREATE DATABASE IF NOT EXISTS \`$DB_NAME\`;
-EOF
-
-fi
-
-echo "Restoring Database..."
-
-if [ -z "$DB_PASS" ]; then
-
-mysql -u "$DB_USER" "$DB_NAME" < /opt/wifi_voucher.sql
-
-else
-
-mysql -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" < /opt/wifi_voucher.sql
-
-fi
-
-echo "Database Restored."
-
-echo "Creating Database User..."
-
-if [ "$DB_USER" != "root" ]; then
+echo "Creating Database & User..."
 
 mysql -u root <<EOF
+CREATE DATABASE IF NOT EXISTS \`$DB_NAME\`;
+
 CREATE USER IF NOT EXISTS '$DB_USER'@'localhost'
+IDENTIFIED BY '$DB_PASS';
+
+ALTER USER '$DB_USER'@'localhost'
 IDENTIFIED BY '$DB_PASS';
 
 GRANT ALL PRIVILEGES
@@ -528,7 +503,11 @@ TO '$DB_USER'@'localhost';
 FLUSH PRIVILEGES;
 EOF
 
-fi
+echo "Restoring Database..."
+
+mysql -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" < /opt/wifi_voucher.sql
+
+echo "Database Restored."
 
 if [ -z "$DB_PASS" ]; then
 
